@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  opl_frontend:
+    build: ./openlearn_njs/
+    container_name: opl_frontend
+    ports:
+      - 3000:3000
+    volumes:
+      - ./openlearn_njs:/app
+    environment:
+      - VAR_NAME=value
+    command: npm start
