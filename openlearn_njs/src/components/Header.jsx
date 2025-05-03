@@ -2,14 +2,28 @@
 
 import Image from "next/image"
 import Link from "next/link"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 
 export default function Header({ showSidebar, setShowSidebar }){
     const [searchQuery, setSearchQuery] = useState('');
     const [showProfile, setShowProfile] = useState(false);
-    // const [showSidebar, setShowSidebar] = useState(false);
+    const [user, setUser] = useState(null);
     const router = useRouter();
+
+    
+    useEffect(() => {
+        fetch(process.env.NEXT_PUBLIC_GET_PROFILE, {
+        method: 'GET',
+        credentials: 'include', // 🔑 This sends cookies with the request
+        }).then(res => {
+            if (!res.ok) {
+            throw new Error('Unauthorized');
+            }
+            return res.json();
+        }).then(data => setUser(data)).catch(() => setUser(null));
+    }, []);
+
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -53,14 +67,19 @@ export default function Header({ showSidebar, setShowSidebar }){
             
             {/* {showProfile && ( */}
             <div className={`profile ${showProfile ? "active" : ""}`}>
-                <Image src="/images/pic-1.jpg" className="image" alt="pic-1" width={50} height={50}/>
-                <h3 className="name">Pearapat Sangsri</h3>
-                <p className="role">student</p>
-                <Link href="profile" className="btn">view profile</Link>
+            {user ? (
+                <>
+                <img src="/images/pic-1.jpg" className="image" alt="pic-1" width={50} height={50} />
+                <h3 className="name">{user.name || user.username}</h3>
+                <p className="role">{user.role}</p>
+                <a href="profile" className="btn">view profile</a>
+                </>
+            ) : (
                 <div className="flex-btn">
-                    <Link href="login" className="option-btn">login</Link>
-                    <Link href="register" className="option-btn">register</Link>
+                <a href="login" className="option-btn">login</a>
+                <a href="register" className="option-btn">register</a>
                 </div>
+            )}
             </div>
             {/* )} */}
         </section>

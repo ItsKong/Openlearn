@@ -1,18 +1,46 @@
 "use client";
-
-import Header from "@/components/Header";
-import SideBar from "@/components/Sidebar";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 export default function Login(){
     const [email, setEmail] = useState("");
     const [pass, setPass] = useState("");
-
+    const router = useRouter()
     const handleSubmit = (e) => {
         e.preventDefault();
         // handle login logic here
-        console.log("Email:", email);
-        console.log("Password:", pass);
+
+        // const data = new FormData();
+        // data.append("email", email);
+        // data.append("password", pass);
+        // Object.fromEntries(data)
+        const data = JSON.stringify({
+          email: email,
+          password: pass
+        });
+
+        //fetch
+        fetch(process.env.NEXT_PUBLIC_TOKEN, {
+          method: "POST",
+          headers: {
+              'Content-Type': 'application/json'
+          },
+          body: data,
+          credentials: 'include', // Important for cookies
+        })
+        .then(res => {
+          if (!res.ok) {
+            throw new Error(`HTTP error! :( Status: ${res.status}`);
+          }
+          return res.json(); // ✅ don't console.log() before parsing
+        })
+        .then(json => {
+          console.log("Login:", json);
+          router.push("/")
+        })
+        .catch(error => {
+          console.error("Login error:", error);
+        });    
     };
     return(
 <div>

@@ -11,7 +11,7 @@ export default function ClientLayout({ children }) {
       <body>
         <Nav/>
         {children}
-        <footer class="footer">
+        <footer className="footer">
         &copy; copyright @ 2025 by <span>Thammasat University</span> | all rights reserved!
         </footer>
       </body>

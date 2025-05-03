@@ -16,7 +16,15 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from user_service.views import *
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('api/register/', register, name='register'),
+    # path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),   # login
+    path('api/token/refresh/', CookieTokenRefreshView.as_view(), name='token_refresh'),  # refresh
+    path('api/token/', CustomTokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('api/userall/', UserView.as_view(), name='userinfo'),
+    path('api/profile/', ProfileView.as_view(), name='user_profile'),
 ]
