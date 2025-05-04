@@ -196,7 +196,7 @@ section {
 .header .flex .profile.active {
    transform: scale(1);
 }
-.header .flex .profile .image {
+.header .flex .profile .Image {
    border-radius: 50%;
    height: 10rem;
    margin-bottom: 1rem;
@@ -249,7 +249,7 @@ section {
    padding:3rem 2rem;
    text-align: center;
 }
-.side-bar .profile .image {
+.side-bar .profile .Image {
    border-radius: 50%;
    height: 10rem;
    margin-bottom: 1rem;
@@ -354,10 +354,10 @@ section {
    flex-wrap: wrap;
    gap:1.5rem;
 }
-.about .row .image {
+.about .row .Image {
    flex: 1 1 40rem;
 }
-.about .row .image Image {
+.about .row .Image Image {
    height: 50rem;
    width: 100%;
 }
@@ -1017,10 +1017,10 @@ section {
    flex-wrap: wrap;
    gap: 1.5rem;
 }
-.contact .row .image {
+.contact .row .Image {
    flex: 1 1 50rem;
 }
-.contact .row .image Image {
+.contact .row .Image Image {
    width: 100%;
 }
 .contact .row form {
@@ -1183,7 +1183,7 @@ section {
    .home-grid .box-container {
       grid-template-columns: 1fr;
    }
-   .about .row .image Image {
+   .about .row .Image Image {
       height: 25rem;
    }
 }

@@ -17,9 +17,10 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from user_service.views import *
-
+from courses.views import *
 
 urlpatterns = [
+    # ========= user_service app ==========
     path('admin/', admin.site.urls),
     path('api/register/', register, name='register'),
     # path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),   # login
@@ -27,4 +28,13 @@ urlpatterns = [
     path('api/token/', CustomTokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/userall/', UserView.as_view(), name='userinfo'),
     path('api/profile/', ProfileView.as_view(), name='user_profile'),
+    path('api/logout/', LogoutView.as_view(), name='logout'),
+    
+    # ========= course app ==========
+    path('api/course/all/', courseView, name='couse_view_all'),
+    path('api/video/all/', videoView, name='video_view_all'),
+    path('api/insert/vid', insertVideoMany),
+    path('api/course/<int:courseId>', courseViewOne, name='couse_view_one'),
+    path('api/video/<int:courseId>', videoByCourseId, name='video_view_by_course'),
+    path('api/video/byid/<int:videoId>', videoById, name='video_by_id'),
 ]

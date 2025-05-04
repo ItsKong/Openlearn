@@ -1,6 +1,6 @@
 from user_service.serializers import UserModelSerializer, CustomTokenObtainPairSerializer
 from user_service.authentication import CookieJWTAuthentication
-from django.http import HttpResponse, JsonResponse
+from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.models import User
 from django.utils.decorators import method_decorator
@@ -117,16 +117,16 @@ class CustomTokenObtainPairView(TokenObtainPairView):
                 'access_token',
                 access_token,
                 httponly=True,
-                secure=settings.DEBUG is False, # Only set secure in production
-                samesite='Lax'
+                secure=True, # Only set secure in production
+                samesite='None',
             )
         if refresh_token:
             response.set_cookie(
                 'refresh_token',
                 refresh_token,
                 httponly=True,
-                secure=settings.DEBUG is False,
-                samesite='Lax'
+                secure=True,
+                samesite='None',
             )
         return response
 

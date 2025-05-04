@@ -9,11 +9,6 @@ export default function Login(){
     const handleSubmit = (e) => {
         e.preventDefault();
         // handle login logic here
-
-        // const data = new FormData();
-        // data.append("email", email);
-        // data.append("password", pass);
-        // Object.fromEntries(data)
         const data = JSON.stringify({
           email: email,
           password: pass
@@ -36,7 +31,7 @@ export default function Login(){
         })
         .then(json => {
           console.log("Login:", json);
-          router.push("/")
+          window.location.href = "/";
         })
         .catch(error => {
           console.error("Login error:", error);
