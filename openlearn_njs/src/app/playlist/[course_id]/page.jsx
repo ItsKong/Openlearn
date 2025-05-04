@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import Swal from 'sweetalert2';
 import { use, useState, useEffect } from "react";
 
 export default function Playlist({ params }){
@@ -29,6 +30,36 @@ export default function Playlist({ params }){
         .catch(err => console.error("Error fetching videoList:", err));
     }, [])
 
+    async function handleSave(e) {
+        e.preventDefault();
+
+        try{
+            const full_url = `${process.env.NEXT_PUBLIC_POST_SD_COURSE}${course_id}`
+            const response = await fetch(full_url, {
+                method: 'POST',
+                credentials: 'include',
+            });
+            const data = await response.json();
+            if (response.ok) {
+                Swal.fire({
+                    icon: 'success',
+                    title: data.message || 'Course saved!',
+                    showConfirmButton: false,
+                    timer: 1500,
+                });
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: data.error || 'Something went wrong',
+                    showConfirmButton: true,
+                });
+            }
+        } catch (err) {
+            console.error(err);
+            alert('Error saving course');
+        }
+    }
+
     if (!course) return <div>Loading...</div>;
     if (!course?.thumbnail) return <div>Loading...</div>;
     if (!videos) return <div>Loading...</div>;
@@ -40,11 +71,6 @@ export default function Playlist({ params }){
 <h1 className="heading">courses details</h1>
     <div className="row">
         <div className="column">
-                <div className="bg-muted rounded cursor-pointer px-4 py-3 relative">
-                    <button type="submit">
-                        <span>save playlist</span>
-                    </button>
-                </div>
                 <div className="thumb">
                     <div className="w-full h-[30rem] relative">
                         <Image src={course.thumbnail.replace('./openlearn_njs/public', '')}
@@ -78,7 +104,9 @@ export default function Playlist({ params }){
             <div className="details">
                 <h3>{course.title}</h3>
                 <p>{course.detail}</p>
-                <a href="#" className="inline-btn">enroll course</a>
+                <button className="inline-btn" onClick={(e) => handleSave(e, course_id)}>
+                    Save Course
+                </button>
             </div>
         </div>
     </div>

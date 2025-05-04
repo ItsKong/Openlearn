@@ -37,7 +37,7 @@ export default function SideBar({ showSidebar, user }){
                   <Image src="/images/pic-1.jpg" className="image" alt="pic-1" width={100} height={100} />
                </div>
                <h3 className="name">{user.first_name} {user.last_name}</h3>
-               <Link href="profile" className="btn">view profile</Link>
+               <Link href="/profile" className="btn">view profile</Link>
                <button onClick={handleLogout} className="btn">Logout</button> 
                </>
          ) : (

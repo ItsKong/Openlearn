@@ -10,6 +10,7 @@ import { useRouter } from 'next/navigation';
 
 export default function Profile(){
     const [users, setUser] = useState(null);
+    const [saveCourse, setSaveCourse] = useState([]);
     const router = useRouter()
     useEffect(() => {
             fetch(process.env.NEXT_PUBLIC_GET_PROFILE, {
@@ -27,6 +28,21 @@ export default function Profile(){
             router.replace("/login"); // 🔄 Redirects without adding to history
         }
     }, [])
+
+    useEffect(() => {
+        fetch(process.env.NEXT_PUBLIC_GET_SAVE_COURSE, {
+            method: "GET",
+            credentials: 'include'
+
+        }).then(res => {
+            if (!res.ok) {
+            throw new Error('Unauthorized');
+            }
+            return res.json();
+        }).then(data => setSaveCourse(data)).catch(() => setSaveCourse([]));
+    }, []);
+    if (!saveCourse) return <p>Loading</p>
+
     return(
 <div>
     <div>
@@ -54,6 +70,49 @@ export default function Profile(){
 
       <h1 className="heading"><i className="far fa-bookmark"></i> saved playlist (number)</h1>
         <h1 className="heading">From db</h1>
+        <div className="box-container">
+
+        {saveCourse.length > 0 ? (
+            saveCourse.map((course, index) => (
+                <div className="box" key={index}>
+                    <div className="tutor">
+                        <div className="w-20 h-20 relative rounded-full overflow-hidden">
+                            <Image src={course.img.replace('./openlearn_njs/public', '')}
+                            alt="tutor image"
+                            fill
+                            className="object-cover w-full h-full rounded-full"
+                            />
+                        </div>
+                        <div className="info">
+                            <h3>{course.tutor}</h3>
+                            <span>{course.create_at}</span>
+                        </div>
+                    </div>
+                    <div className="thumb">
+                        <div className="w-full h-[20rem] relative">
+                            <Image 
+                            src={course.thumbnail.replace('./openlearn_njs/public', '')} 
+                            alt="course thumbnail"
+                            fill
+                            className="object-cover w-full h-full rounded"
+                            />
+                        </div>
+                        {course.video_count > 0 ? (
+                            <span>{`${course.video_count} videos`}</span>
+                        ) : (
+                            <span>{`comming soon!`}</span>
+                        )}
+                    </div>
+                    <h3 className="title">{course.title}</h3>
+                    <Link href={`playlist/${course.id}`} className="inline-btn">view courses</Link>
+                </div>
+                ))
+            ) : (
+                <div className="box">
+                    <h1>No course</h1>
+                </div>
+        )}
+        </div>
    </section>
     </div>
 </div>

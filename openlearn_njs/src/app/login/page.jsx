@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Swal from 'sweetalert2';
 
 export default function Login(){
     const [email, setEmail] = useState("");
@@ -25,6 +26,11 @@ export default function Login(){
         })
         .then(res => {
           if (!res.ok) {
+            Swal.fire({
+              icon: 'error',
+              title: data.error || 'Email or Password is wrong',
+              showConfirmButton: true,
+            });
             throw new Error(`HTTP error! :( Status: ${res.status}`);
           }
           return res.json(); // ✅ don't console.log() before parsing

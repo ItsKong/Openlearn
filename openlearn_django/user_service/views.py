@@ -1,5 +1,7 @@
 from user_service.serializers import UserModelSerializer, CustomTokenObtainPairSerializer
 from user_service.authentication import CookieJWTAuthentication
+from user_service.models import *
+from courses.models import *
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.models import User
@@ -94,7 +96,55 @@ class ProfileView(APIView):
             # Add other fields as needed
         }
         return Response(data)
+    
+class viewSaveList(APIView):
+    authentication_classes = [CookieJWTAuthentication]
+    permission_classes = [IsAuthenticated]
 
+    def get(self, request):
+        try:
+            userId = request.user.id
+            user_model = UserModel.objects.get(user=userId)
+            
+            # Get the saved courses
+            saved_courses = user_model.save_course.all().values()  # Add relevant fields
+            
+            # Return the list of saved courses
+            return JsonResponse(list(saved_courses), safe=False)
+        except UserModel.DoesNotExist:
+            return JsonResponse({'error': 'User not found'}, status=404)
+
+# def viewSaveList(request, userId):
+#     if request.method == "GET":
+#         try:
+#             user_model = UserModel.objects.get(user=userId)
+            
+#             # Get the saved courses
+#             saved_courses = user_model.save_course.all().values()  # Add relevant fields
+            
+#             # Return the list of saved courses
+#             return JsonResponse(list(saved_courses), safe=False)
+#         except UserModel.DoesNotExist:
+#             return JsonResponse({'error': 'User not found'}, status=404)
+
+class Save_Course_by_Id(APIView):
+    authentication_classes = [CookieJWTAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, courseId):
+        try:
+            user_model = UserModel.objects.get(user=request.user)
+            course = CourseModel.objects.get(id=courseId)
+
+            if course in user_model.save_course.all():
+                user_model.save_course.remove(course)
+                return JsonResponse({'message': 'Course unsaved'})
+            else:
+                user_model.save_course.add(course)
+                return JsonResponse({'message': 'Course saved'})
+        except Exception as e:
+            return JsonResponse({'error': 'Someting wrong', 'message': str(e)}, status=404)
+        
 class LogoutView(APIView):
     def post(self, request):
         response = Response({"detail": "Successfully logged out."})

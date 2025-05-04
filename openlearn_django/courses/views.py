@@ -9,14 +9,22 @@ from courses.models import *
 # Create your views here.
 
 def courseView(request):
+    # all course
     if request.method == "GET":
         courses = CourseModel.objects.annotate(video_count=Count('videos'))
         data = list(courses.values('id', 'title', 'tutor', 'img', 
                                    'detail', 'created_at', 'thumbnail', 'video_count'))
         return JsonResponse(data, safe=False)
 
+def videoView(request):
+    # all video
+    if request.method == "GET":
+        data = list(VideoModel.objects.values())
+        return JsonResponse(data, safe=False)
+    
 @csrf_exempt
 def courseViewOne(request, courseId):
+    # one course with video 
     if request.method == "GET":
         course = get_object_or_404(CourseModel.objects.annotate(video_count=Count('videos')), id=courseId)
         data = {
@@ -34,17 +42,14 @@ def courseViewOne(request, courseId):
 
 @csrf_exempt
 def videoByCourseId(request, courseId):
+    # for video of course in playlist
     if request.method == "GET":
         videos = VideoModel.objects.filter(course=courseId).values()
         return JsonResponse(list(videos), safe=False)
     return JsonResponse({"error": "GET method required"}, status=405)
-
-def videoView(request):
-    if request.method == "GET":
-        data = list(VideoModel.objects.values())
-        return JsonResponse(data, safe=False)
     
 def videoById(request, videoId):
+    # for /watch
     if request.method == "GET":
         video = VideoModel.objects.get(id=videoId)
         data = {
@@ -59,6 +64,7 @@ def videoById(request, videoId):
         return JsonResponse(data, safe=False)
     
 def searchCourse(request, query):
+    # for searching
     if request.method == "GET":
         # Use Q objects for more complex queries
         from django.db.models import Q
@@ -91,6 +97,7 @@ def searchCourse(request, query):
     return JsonResponse({"error": "GET method required"}, status=405)
     
 def insertVideoMany(request):
+    # dummy
     if request.method == "GET":
         try:
             course = CourseModel.objects.get(id=3)

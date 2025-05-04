@@ -6,7 +6,7 @@ from django.contrib.auth import get_user_model
 class UserModelSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserModel
-        fields = ['user', 'profile']
+        fields = '__all__'
 
 User = get_user_model()
 class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):

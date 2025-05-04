@@ -29,6 +29,8 @@ urlpatterns = [
     path('api/userall/', UserView.as_view(), name='userinfo'),
     path('api/profile/', ProfileView.as_view(), name='user_profile'),
     path('api/logout/', LogoutView.as_view(), name='logout'),
+    path('api/save_course_view/', viewSaveList.as_view(), name='view_saved'),
+    path('api/saveCouse/<int:courseId>', Save_Course_by_Id.as_view(), name='saving_course'),
     
     # ========= course app ==========
     path('api/course/all/', courseView, name='couse_view_all'),
