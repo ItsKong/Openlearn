@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { useEffect } from "react";
 import { useRouter } from 'next/navigation';
+import Swal from "sweetalert2";
 
 
 
@@ -42,6 +43,37 @@ export default function Profile(){
         }).then(data => setSaveCourse(data)).catch(() => setSaveCourse([]));
     }, []);
     if (!saveCourse) return <p>Loading</p>
+
+    async function handleSave(e, course_id) {
+        e.preventDefault();
+
+        try{
+            const full_url = `${process.env.NEXT_PUBLIC_POST_SD_COURSE}${course_id}`
+            const response = await fetch(full_url, {
+                method: 'POST',
+                credentials: 'include',
+            });
+            const data = await response.json();
+            if (response.ok) {
+                Swal.fire({
+                    icon: 'success',
+                    title: data.message || 'Course saved!',
+                    showConfirmButton: false,
+                    timer: 1500,
+                });
+                window.location.reload();
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: data.error || 'Something went wrong',
+                    showConfirmButton: true,
+                });
+            }
+        } catch (err) {
+            console.error(err);
+            alert('Error saving course');
+        }
+    }
 
     return(
 <div>
@@ -105,6 +137,9 @@ export default function Profile(){
                     </div>
                     <h3 className="title">{course.title}</h3>
                     <Link href={`playlist/${course.id}`} className="inline-btn">view courses</Link>
+                    <button className="inline-btn" onClick={(e) => handleSave(e, course.id)}>
+                        Save Course
+                    </button>
                 </div>
                 ))
             ) : (
