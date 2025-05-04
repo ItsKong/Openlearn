@@ -45,7 +45,7 @@ def videoView(request):
         return JsonResponse(data, safe=False)
     
 def videoById(request, videoId):
-     if request.method == "GET":
+    if request.method == "GET":
         video = VideoModel.objects.get(id=videoId)
         data = {
             "id": video.id,
@@ -57,6 +57,38 @@ def videoById(request, videoId):
             # add other fields as needed
         }
         return JsonResponse(data, safe=False)
+    
+def searchCourse(request, query):
+    if request.method == "GET":
+        # Use Q objects for more complex queries
+        from django.db.models import Q
+        
+        # Split the query into words
+        query_words = query.split()
+        
+        # Start with an empty Q object
+        q_object = Q()
+        
+        # Add each word to the query
+        for word in query_words:
+            # This will match if the word appears anywhere in the title
+            q_object |= Q(title__icontains=word)
+        
+        # Filter courses based on the combined query
+        courses = CourseModel.objects.filter(q_object).annotate(video_count=Count('videos'))
+        if not courses.exists():
+            return JsonResponse({"message": "No courses found"}, status=404)
+        data = list(courses.values(
+            'id', 
+            'title', 
+            'tutor', 
+            'img', 
+            'detail', 
+            'created_at', 
+            'thumbnail', 
+            'video_count'))
+        return JsonResponse(data, safe=False)
+    return JsonResponse({"error": "GET method required"}, status=405)
     
 def insertVideoMany(request):
     if request.method == "GET":

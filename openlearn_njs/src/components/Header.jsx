@@ -13,8 +13,7 @@ export default function Header({ showSidebar, setShowSidebar}){
     const handleSubmit = (e) => {
         e.preventDefault();
         if (searchQuery.trim()) {
-            // router.push(`/search?query=${encodeURIComponent(searchQuery)}`);
-            
+            router.push(`/search?query=${encodeURIComponent(searchQuery.trim())}`);
         }
     };
 
