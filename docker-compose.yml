@@ -1,13 +1,24 @@
 version: '3.8'
 
 services:
-  opl_frontend:
+  frontend:
     build: ./openlearn_njs/
     container_name: opl_frontend
     ports:
       - 3000:3000
     volumes:
       - ./openlearn_njs:/app
-    environment:
-      - VAR_NAME=value
-    command: npm start
+    command: sh -c "npm run build && npm start"
+  
+  backend:
+    build: ./openlearn_django/
+    container_name: opl_backend
+    ports:
+      - 3001:8000
+    volumes:
+      - ./openlearn_django:/app
+      - ./openlearn_django/static:/app/static 
+      - ./staticfiles:/static
+    command: >
+      sh -c "python manage.py migrate &&
+             gunicorn openlearn_django.wsgi:application --bind 0.0.0.0:8000"

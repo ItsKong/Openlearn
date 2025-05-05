@@ -13,6 +13,7 @@ export default function Profile(){
     const [users, setUser] = useState(null);
     const [saveCourse, setSaveCourse] = useState([]);
     const router = useRouter()
+
     useEffect(() => {
             fetch(process.env.NEXT_PUBLIC_GET_PROFILE, {
             method: 'GET',
@@ -85,9 +86,6 @@ export default function Profile(){
         <div className="info">
         {users ? (
             <div className="user">
-                <div className="flex justify-center">
-                    <Image src="/images/pic-1.jpg" alt="" width={100} height={100} />
-                </div>
                 <h3>{users.first_name} {users.last_name}</h3>
                 <p>{users.email}</p>
                 <Link href="/updateProfile" className="inline-btn">update profile</Link>

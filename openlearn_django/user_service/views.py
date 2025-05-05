@@ -5,6 +5,7 @@ from courses.models import *
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.models import User
+from django.contrib.auth.hashers import check_password
 from django.utils.decorators import method_decorator
 from django.conf import settings
 from rest_framework.parsers import JSONParser
@@ -12,6 +13,7 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework_simplejwt.serializers import TokenRefreshSerializer
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
@@ -71,6 +73,60 @@ def register(request):
             return JsonResponse({"error":"data not valid", "message": str(e)}, status=400)
     return JsonResponse({"error":"method not allowed."}, status=405)
 
+class updateUser(APIView):
+    authentication_classes = [CookieJWTAuthentication]
+    permission_classes = [IsAuthenticated]
+    # username: "",
+    #   f_name: "",
+    #   l_name: "",
+    #   email: "",
+    #   old_pass: "",
+    #   pass: "",
+    #   c_pass: "",
+    #   file: null,
+
+    def post(self, request):
+        user_model = UserModel.objects.get(user=request.user)
+        if 'application/json' in request.content_type:
+                data = JSONParser().parse(request)
+                profile_image = None
+            # For multipart/form-data (with files)
+        else:
+            data = request.POST.dict()
+            profile_image = request.FILES.get('file', None)
+         # Extract fields
+        username = data.get('username', '').strip()
+        f_name = data.get('f_name', '').strip()
+        l_name = data.get('l_name', '').strip()
+        email = data.get('email', '').strip()
+        old_pass = data.get('old_pass', '')
+        new_pass = data.get('pass', '')
+        c_pass = data.get('c_pass', '')
+
+        # Validate password match
+        if new_pass or c_pass:
+            if new_pass != c_pass:
+                return Response({'detail': 'Passwords do not match'}, status=400)
+            if not check_password(old_pass, request.user.password):
+                return Response({'detail': 'Old password is incorrect'}, status=400)
+            request.user.set_password(new_pass)
+
+        # Update basic info
+        request.user.username = username or request.user.username
+        request.user.first_name = f_name or request.user.first_name
+        request.user.last_name = l_name or request.user.last_name
+        request.user.email = email or request.user.email
+        request.user.save()
+
+        # Update profile image if present
+        if profile_image:
+            user_model.profile = profile_image  # Assuming "profile" is the field name
+            user_model.save()
+
+        return Response({'detail': 'User updated successfully'})
+
+
+
 class UserView(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -114,18 +170,6 @@ class viewSaveList(APIView):
         except UserModel.DoesNotExist:
             return JsonResponse({'error': 'User not found'}, status=404)
 
-# def viewSaveList(request, userId):
-#     if request.method == "GET":
-#         try:
-#             user_model = UserModel.objects.get(user=userId)
-            
-#             # Get the saved courses
-#             saved_courses = user_model.save_course.all().values()  # Add relevant fields
-            
-#             # Return the list of saved courses
-#             return JsonResponse(list(saved_courses), safe=False)
-#         except UserModel.DoesNotExist:
-#             return JsonResponse({'error': 'User not found'}, status=404)
 
 class Save_Course_by_Id(APIView):
     authentication_classes = [CookieJWTAuthentication]
@@ -180,25 +224,33 @@ class CustomTokenObtainPairView(TokenObtainPairView):
             )
         return response
 
+
 class CookieTokenRefreshView(TokenRefreshView):
+    serializer_class = TokenRefreshSerializer
+
     def post(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
+        refresh_token = request.COOKIES.get('refresh_token')
+
+        if not refresh_token:
+            return Response({'detail': 'No refresh token provided'}, status=401)
+        
+        serializer = self.get_serializer(data={'refresh': refresh_token})
 
         try:
             serializer.is_valid(raise_exception=True)
         except Exception:
-            return Response({'detail': 'Invalid refresh token'}, status=status.HTTP_401_UNAUTHORIZED)
+            return Response({'detail': 'Invalid refresh token'}, status=401)
 
-        access = serializer.validated_data["access"]
+        access_token = serializer.validated_data["access"]
         response = Response({'detail': 'Token refreshed'}, status=200)
 
         # Set the new access token in an HTTP-only cookie
         response.set_cookie(
             key='access_token',
-            value=access,
+            value=access_token,
             httponly=True,
             secure=True,  # Set False for local dev only
-            samesite='Lax',
+            samesite='None',
             max_age=60 * 5  # 5 minutes
         )
         return response

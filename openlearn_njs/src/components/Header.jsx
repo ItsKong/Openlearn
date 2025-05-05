@@ -44,9 +44,13 @@ export default function Header({ showSidebar, setShowSidebar}){
             </form>
 
             <div className="icons">
-                <div id="menu-btn" className="" onClick={() => setShowSidebar(!showSidebar)}></div>
+                <div id="menu-btn" className="" onClick={() => setShowSidebar(!showSidebar)}>
+                    <p>Menu</p>
+                </div>
                 <div id="search-btn" className="fas fa-search"></div>
-                <div id="toggle-btn" className="fas fa-sun"></div>
+                <div id="toggle-btn" className="fas fa-sun">
+                    <p>D/L</p>
+                </div>
             </div>
         </section>
 
