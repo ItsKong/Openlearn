@@ -9,6 +9,9 @@ class CourseModel(models.Model):
     created_at = models.DateField(auto_now=True)
     thumbnail = models.CharField(max_length=255, null=True, blank=True)
 
+    def __str__(self):
+        return self.title
+
 
 class VideoModel(models.Model):
     course = models.ForeignKey(CourseModel, related_name='videos', on_delete=models.CASCADE)
@@ -17,4 +20,7 @@ class VideoModel(models.Model):
     created_at = models.DateField(auto_now=True)
     thumbnail = models.CharField(max_length=255, null=True, blank=True)
     detail = models.CharField(max_length=255, null=True, blank=True)
+
+    def __str__(self):
+        return self.title
 

@@ -6,3 +6,6 @@ from courses.models import CourseModel
 class UserModel(models.Model):
     user = models.OneToOneField(User, related_name='user_addi',on_delete=models.CASCADE)
     save_course = models.ManyToManyField(CourseModel, related_name='user_save', blank=True) 
+
+    def __str__(self):
+        return self.user.username
