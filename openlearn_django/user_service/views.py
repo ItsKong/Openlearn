@@ -213,6 +213,7 @@ class CustomTokenObtainPairView(TokenObtainPairView):
                 httponly=True,
                 secure=True, # Only set secure in production
                 samesite='None',
+                max_age=60 * 5 
             )
         if refresh_token:
             response.set_cookie(
@@ -221,6 +222,7 @@ class CustomTokenObtainPairView(TokenObtainPairView):
                 httponly=True,
                 secure=True,
                 samesite='None',
+                max_age=60 * 60 * 24
             )
         return response
 

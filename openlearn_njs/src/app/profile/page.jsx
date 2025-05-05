@@ -134,10 +134,12 @@ export default function Profile(){
                         )}
                     </div>
                     <h3 className="title">{course.title}</h3>
-                    <Link href={`playlist/${course.id}`} className="inline-btn">view courses</Link>
-                    <button className="inline-btn" onClick={(e) => handleSave(e, course.id)}>
-                        Save Course
-                    </button>
+                    <div className="flex gap-3">
+                        <Link href={`playlist/${course.id}`} className="inline-btn">view courses</Link>
+                        <button className="inline-btn p-2" onClick={(e) => handleSave(e, course.id)}>
+                            Delete Course
+                        </button>
+                    </div>
                 </div>
                 ))
             ) : (

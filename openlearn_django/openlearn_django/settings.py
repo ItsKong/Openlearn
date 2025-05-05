@@ -33,6 +33,8 @@ CORS_ALLOWED_ORIGINS = [
     "http://192.168.1.3:3000",         # Network access
     "http://localhost:3002",
     "http://192.168.1.3:3002",
+    "http://frontend:3000",
+    "http://backend:8000",
 ]
 CORS_ALLOW_CREDENTIALS = True
 # Application definition

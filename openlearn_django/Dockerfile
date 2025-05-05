@@ -13,6 +13,8 @@ RUN apt-get update && apt-get install -y \
     libpq-dev \
     && rm -rf /var/lib/apt/lists/*
 
+# RUN ln -s /usr/local/bin/python3 /usr/local/bin/python
+
 # Step 5: Install Python dependencies
 COPY requirements.txt ./
 RUN pip install --upgrade pip

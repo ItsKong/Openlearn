@@ -15,7 +15,7 @@ export default function ClientLayout({ children }) {
     }).catch(e => {
         console.error("Failed to refresh token:", e);
     })
-  }, [])
+  }, 60 * 3)
   
   return (
     <html lang="en">

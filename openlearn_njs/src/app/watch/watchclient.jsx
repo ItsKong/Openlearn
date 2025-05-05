@@ -1,7 +1,7 @@
 "use client";
 // pages/watch.jsx
 import { useSearchParams  } from 'next/navigation';
-import { useEffect, useState, Suspense} from 'react';
+import { useEffect, useState } from 'react';
 import Image from 'next/image';
 
 export default function Watch(){
@@ -35,7 +35,7 @@ export default function Watch(){
     if (!vdata || !cdata) return <p>Loading...</p>;
     if (!cdata.img) return <div>Loading image...</div>;
     return(
-<Suspense fallback={<div>Loading...</div>}>
+
         <section className="watch-video">
         <div className="video-container">
            <div className="video">
@@ -71,6 +71,5 @@ export default function Watch(){
            </p>
         </div>
      </section>
-</Suspense>
     );
 };

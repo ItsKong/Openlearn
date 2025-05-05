@@ -3,11 +3,21 @@ version: '3.8'
 services:
   frontend:
     build: ./openlearn_njs/
+      # context: ./openlearn_njs/
+      # args:
+      #   - PUBLIC_API_URL=http://backend:8000
     container_name: opl_frontend
     ports:
       - 3000:3000
     volumes:
       - ./openlearn_njs:/app
+      - /app/node_modules
+    environment:
+      - PUBLIC_API_URL=http://localhost:3001
+    depends_on:
+      - backend
+    networks:
+      - app-network
     command: sh -c "npm run build && npm start"
   
   backend:
@@ -19,6 +29,13 @@ services:
       - ./openlearn_django/:/app
     environment:
       - DEBUG=0
+    networks:
+      - app-network
     command: >
       sh -c "python manage.py migrate &&
              gunicorn openlearn_django.wsgi:application --bind 0.0.0.0:8000"
+
+
+networks:
+  app-network:
+    driver: bridge

@@ -1,22 +1,22 @@
-# Step 1: Use the official Node.js image
-FROM node:latest
+# Use official Node.js image
+FROM node:20-slim
 
-# Step 2: Set the working directory inside the container
+# Set working directory
 WORKDIR /app
 
-# Step 3: Copy package files and install dependencies
-COPY package*.json ./
+# Copy package files and install dependencies
+COPY package.json package-lock.json ./
 RUN npm install
+# RUN npm rebuild lightningcss
 
-# Step 4: Copy all project files into the container
+# Copy rest of the app
 COPY . .
 
-# Step 5: Build the Next.js app
+# Build the Next.js app
 RUN npm run build
 
-# Step 6: Expose the port Next.js will run on
+# Expose the port Next.js runs on
 EXPOSE 3000
 
-# Step 7: Run the app (for production)
-CMD npm start
-
+# Start the application
+CMD ["npm", "start"]
