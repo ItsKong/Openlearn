@@ -31,6 +31,8 @@ ALLOWED_HOSTS = []
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",           # Next.js dev
     "http://192.168.1.3:3000",         # Network access
+    "http://localhost:3002",
+    "http://192.168.1.3:3002",
 ]
 CORS_ALLOW_CREDENTIALS = True
 # Application definition

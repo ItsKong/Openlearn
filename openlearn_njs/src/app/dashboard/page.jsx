@@ -33,11 +33,13 @@ export default function Dashbaord(){
         <div className="box-container">
             {courses.length > 0 ? (
                 courses.map((course, index) => (
-                    <div className="box">
+                    <div className="box" key={index}>
                         <div className="thumb">
-                            <div className="w-[20rem] h-[10rem] relative">
+                            <div className="relative w-[20rem] h-[10rem]">
                                 <Image src={course.thumbnail.replace('./openlearn_njs/public', '')} 
                                 alt="Course Thumbnail" 
+                                // width={200}
+                                // height={150}
                                 fill
                                 className="object-cover w-full h-full rounded"
                                 />
