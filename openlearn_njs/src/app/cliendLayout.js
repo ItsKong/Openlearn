@@ -13,7 +13,7 @@ export default function ClientLayout({ children }) {
         }
         console.log("Access token refreshed via cookie");
     }).catch(e => {
-        console.error("Failed to refresh token:", error);
+        console.error("Failed to refresh token:", e);
     })
   }, [])
   

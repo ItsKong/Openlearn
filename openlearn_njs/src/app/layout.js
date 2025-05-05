@@ -1,6 +1,7 @@
-import "./globals.css";
+// import "./globals.css";
 import Script from "next/script";
 import ClientLayout from "./cliendLayout";
+
 
 export const metadata = {
   title: "OpenLearn",
@@ -13,9 +14,7 @@ export default function RootLayout({ children }) {
        <head>
         <link rel="stylesheet" href="/css/style.css" precedence="default" />
       </head>
-      <body
-        // className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >   
+      <body>   
           <ClientLayout>
           {children}
           </ClientLayout>

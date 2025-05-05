@@ -16,9 +16,9 @@ services:
     ports:
       - 3001:8000
     volumes:
-      - ./openlearn_django:/app
-      - ./openlearn_django/static:/app/static 
-      - ./staticfiles:/static
+      - ./openlearn_django/:/app
+    environment:
+      - DEBUG=0
     command: >
       sh -c "python manage.py migrate &&
              gunicorn openlearn_django.wsgi:application --bind 0.0.0.0:8000"
