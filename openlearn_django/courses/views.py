@@ -11,7 +11,7 @@ from courses.models import *
 def courseView(request):
     # all course
     if request.method == "GET":
-        courses = CourseModel.objects.annotate(video_count=Count('videos'))
+        courses = CourseModel.objects.annotate(video_count=Count('videos')).order_by('id')
         data = list(courses.values('id', 'title', 'tutor', 'img', 
                                    'detail', 'created_at', 'thumbnail', 'video_count'))
         return JsonResponse(data, safe=False)

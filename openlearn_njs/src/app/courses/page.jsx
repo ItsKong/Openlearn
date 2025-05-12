@@ -28,7 +28,7 @@ export default function courese(){
     return(
 <div>
 <section className="courses">
-    <h1 className="heading">our courses (DB)</h1>
+    <h1 className="heading">our courses</h1>
     <div className="box-container">
 
     {courses.length > 0 ? (

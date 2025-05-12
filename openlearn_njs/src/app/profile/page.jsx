@@ -58,7 +58,7 @@ export default function Profile(){
             if (response.ok) {
                 Swal.fire({
                     icon: 'success',
-                    title: data.message || 'Course saved!',
+                    title: 'Course Deleted!',
                     showConfirmButton: false,
                     timer: 1500,
                 });
@@ -99,7 +99,6 @@ export default function Profile(){
     <section className="courses">
 
       <h1 className="heading"><i className="far fa-bookmark"></i> saved playlist (number)</h1>
-        <h1 className="heading">From db</h1>
         <div className="box-container">
 
         {saveCourse.length > 0 ? (

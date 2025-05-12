@@ -4,18 +4,26 @@ import { useEffect } from "react";
 
 export default function ClientLayout({ children }) {
   useEffect(() => {
-    fetch(process.env.NEXT_PUBLIC_REFRESH_TOKEN, {
+    const fetchRefreshToken = () => {
+      fetch(process.env.NEXT_PUBLIC_REFRESH_TOKEN, {
         method: "POST",
         credentials: "include",
-    }).then(res => {
+      }).then(res => {
         if (!res.ok) {
-            throw new Error ("Error refreshing token")
+          throw new Error ("Error refreshing token")
         }
         console.log("Access token refreshed via cookie");
-    }).catch(e => {
+      }).catch(e => {
         console.error("Failed to refresh token:", e);
-    })
-  }, 60 * 3)
+      })
+    }
+
+    fetchRefreshToken();
+
+    const interval = setInterval(fetchRefreshToken, 60 * 3 * 1000);
+
+    return () => clearInterval(interval);
+  }, [])
   
   return (
     <html lang="en">

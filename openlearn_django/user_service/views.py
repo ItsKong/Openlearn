@@ -5,6 +5,7 @@ from courses.models import *
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.models import User
+from django.db.models import Count
 from django.contrib.auth.hashers import check_password
 from django.utils.decorators import method_decorator
 from django.conf import settings
@@ -35,8 +36,10 @@ def register(request):
                 profile_image = request.FILES.get('profile', None)
             # Check username availability
             print("Receive: ", data)
-            if User.objects.filter(username=data['f_name']).exists():
+            if User.objects.filter(username=data['username']).exists():
                 return JsonResponse({"error": "Username already used."}, status=400)
+            elif User.objects.filter(email=data['email']).exists():
+                return JsonResponse({"error": "Email already used."}, status=400)
             try:
                 new_user = User.objects.create_user(
                     username=data['username'],
@@ -98,7 +101,6 @@ class updateUser(APIView):
         username = data.get('username', '').strip()
         f_name = data.get('f_name', '').strip()
         l_name = data.get('l_name', '').strip()
-        email = data.get('email', '').strip()
         old_pass = data.get('old_pass', '')
         new_pass = data.get('pass', '')
         c_pass = data.get('c_pass', '')
@@ -111,17 +113,19 @@ class updateUser(APIView):
                 return Response({'detail': 'Old password is incorrect'}, status=400)
             request.user.set_password(new_pass)
 
+        if User.objects.filter(username=username).exists():
+            return JsonResponse({"error": "Username already used."}, status=400)
+
         # Update basic info
         request.user.username = username or request.user.username
         request.user.first_name = f_name or request.user.first_name
         request.user.last_name = l_name or request.user.last_name
-        request.user.email = email or request.user.email
         request.user.save()
 
-        # Update profile image if present
-        if profile_image:
-            user_model.profile = profile_image  # Assuming "profile" is the field name
-            user_model.save()
+        # # Update profile image if present
+        # if profile_image:
+        #     user_model.profile = profile_image  # Assuming "profile" is the field name
+        #     user_model.save()
 
         return Response({'detail': 'User updated successfully'})
 
@@ -163,8 +167,12 @@ class viewSaveList(APIView):
             user_model = UserModel.objects.get(user=userId)
             
             # Get the saved courses
-            saved_courses = user_model.save_course.all().values()  # Add relevant fields
-            
+            saved_courses =  user_model.save_course.annotate(
+                video_count=Count('videos')
+            ).values(
+                'id', 'title', 'tutor', 'img', 'detail', 'created_at', 'thumbnail', 'video_count'
+            )
+
             # Return the list of saved courses
             return JsonResponse(list(saved_courses), safe=False)
         except UserModel.DoesNotExist:

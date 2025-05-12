@@ -103,18 +103,6 @@ export default function UpdateProfile(){
                     onChange={handleChange}
                 />
 
-                <p>your email <span>*</span></p>
-                <input
-                    type="email"
-                    name="email"
-                    placeholder="enter your email"
-                    required
-                    maxLength={50}
-                    className="box"
-                    value={formData.email}
-                    onChange={handleChange}
-                />
-
                 <p>previous password <span>*</span></p>
                 <input
                   type="password"

@@ -2,6 +2,7 @@
 import { redirect } from "next/dist/server/api-utils";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Swal from "sweetalert2";
 
 export default function Register() {
     const router = useRouter()
@@ -48,8 +49,15 @@ export default function Register() {
             })
             .then(res => {
               if (!res.ok) {
+                return res.json().then(errorData => {
+                Swal.fire({
+                    icon: 'error',
+                    title: errorData.error || 'An error occurred',
+                    showConfirmButton: true,
+                });
                 throw new Error(`HTTP error! :( Status: ${res.status}`);
-              }
+                });
+            }
               return res.json(); // ✅ don't console.log() before parsing
             })
             .then(json => {
