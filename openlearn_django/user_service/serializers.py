@@ -60,3 +60,5 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
         # })
         
         return super().validate(attrs)
+    
+    

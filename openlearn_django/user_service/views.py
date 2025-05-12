@@ -23,8 +23,10 @@ from rest_framework_simplejwt.views import (
 
 @csrf_exempt
 @permission_classes([AllowAny])
+@api_view(['POST'])
 def register(request):
     if request.method == 'POST':
+        print(request.method)
         try:
             # For regular JSON data (without files)
             if 'application/json' in request.content_type:
@@ -48,15 +50,18 @@ def register(request):
                     first_name=data['f_name'],
                     last_name=data['l_name'],
                 )
+                new_user.save()
             except Exception as e:
                 return JsonResponse({"error":"Fail to create user", "message": str(e)}, status=400)
-            new_user.save()
-            data['user'] = new_user.id
-            user_serialize = UserModelSerializer(data=data)
+            user_data = {
+                'user': new_user.id
+            }
+            user_serialize = UserModelSerializer(data=user_data)
+            print(user_serialize.is_valid())
             if user_serialize.is_valid():
                 user_serialize.save()
                 token_serializer = CustomTokenObtainPairSerializer(data={
-                    'username': data['username'],
+                    'email': data['email'],
                     'password': data['password']
                 })
                 if token_serializer.is_valid():
@@ -71,10 +76,13 @@ def register(request):
                 else:
                     new_user.delete()
                     return JsonResponse({"error": "Token creation failed"}, status=400)
-            new_user.delete()
+            else:
+                new_user.delete()
+                return JsonResponse({"error": "User serialize failed"}, status=400)
         except Exception as e:
             return JsonResponse({"error":"data not valid", "message": str(e)}, status=400)
-    return JsonResponse({"error":"method not allowed."}, status=405)
+    else:
+        return JsonResponse({"error":"method not allowed."}, status=405)
 
 class updateUser(APIView):
     authentication_classes = [CookieJWTAuthentication]

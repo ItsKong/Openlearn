@@ -23,7 +23,6 @@ urlpatterns = [
     # ========= user_service app ==========
     path('admin/', admin.site.urls),
     path('api/register/', register, name='register'),
-    # path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),   # login
     path('api/token/refresh/', CookieTokenRefreshView.as_view(), name='token_refresh'),  # refresh
     path('api/token/', CustomTokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/userall/', UserView.as_view(), name='userinfo'),

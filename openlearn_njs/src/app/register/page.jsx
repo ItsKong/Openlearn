@@ -48,24 +48,24 @@ export default function Register() {
                 credentials: "include",  // 👈 IMPORTANT
             })
             .then(res => {
-              if (!res.ok) {
-                return res.json().then(errorData => {
-                Swal.fire({
-                    icon: 'error',
-                    title: errorData.error || 'An error occurred',
-                    showConfirmButton: true,
-                });
-                throw new Error(`HTTP error! :( Status: ${res.status}`);
-                });
+                if (!res.ok) {
+                    return res.json().then(errorData => {
+                    Swal.fire({
+                        icon: 'error',
+                        title: errorData.error || 'An error occurred',
+                        showConfirmButton: true,
+                    });
+                    throw new Error(`HTTP error! :( Status: ${res.status}`);
+                    });
             }
               return res.json(); // ✅ don't console.log() before parsing
             })
             .then(json => {
-              console.log("Registered:", json);
-              router.push("/")
+                console.log("Registered:", json);
+                router.push("/")
             })
             .catch(error => {
-              console.error("Register error:", error);
+                console.error("Register error:", error);
             });    
         }
         setError("")
