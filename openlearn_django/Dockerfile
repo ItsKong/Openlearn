@@ -22,6 +22,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 # Step 6: Copy project files
 COPY . .
+COPY db.sqlite3 ./
+
 
 # Step 7: Collect static files (optional but recommended for production)
 RUN python manage.py collectstatic --noinput
@@ -30,4 +32,9 @@ RUN python manage.py collectstatic --noinput
 EXPOSE 8000
 
 # Step 9: Run the app (adjust to your preferred WSGI server)
-CMD ["gunicorn", "openlearn_django.wsgi:application", "--bind", "0.0.0.0:8000"]
+# CMD ["sh", "-c", "python manage.py migrate && gunicorn openlearn_django.wsgi:application --bind 0.0.0.0:8000"]
+
+COPY start.sh /start.sh
+RUN chmod +x /start.sh
+CMD ["/start.sh"]
+

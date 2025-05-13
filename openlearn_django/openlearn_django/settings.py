@@ -25,9 +25,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'unsafe-default-key')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get('DEBUG', False)
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = os.environ.get('ALLOWED_HOST', '').split(',')
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",           # Next.js dev
     "http://192.168.1.3:3000",         # Network access
@@ -35,6 +35,7 @@ CORS_ALLOWED_ORIGINS = [
     "http://192.168.1.3:3002",
     "http://frontend:3000",
     "http://backend:8000",
+    'https://openlearn.onrender.com',
 ]
 CORS_ALLOW_CREDENTIALS = True
 # Application definition

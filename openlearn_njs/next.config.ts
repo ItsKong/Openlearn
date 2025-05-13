@@ -1,6 +1,6 @@
 import type { NextConfig } from "next";
 
-const API_URL = process.env.PUBLIC_API_URL || 'http://127.0.0.1:8000' 
+const API_URL = process.env.PUBLIC_API_URL || 'https://openlearn-service.onrender.com' 
 
 const nextConfig: NextConfig = {
   /* config options here */

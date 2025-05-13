@@ -1,22 +1,41 @@
-# Use official Node.js image
-FROM node:20-slim
+# Step 1: Build stage
+FROM node:20-slim AS builder
 
 # Set working directory
 WORKDIR /app
 
-# Copy package files and install dependencies
-COPY package.json package-lock.json ./
+# Copy only package files and install dependencies
+COPY package*.json ./
 RUN npm install
-# RUN npm rebuild lightningcss
 
 # Copy rest of the app
 COPY . .
 
 # Build the Next.js app
+
+ARG PUBLIC_API_URL
+ENV PUBLIC_API_URL=$PUBLIC_API_URL
+
 RUN npm run build
 
-# Expose the port Next.js runs on
+# Step 2: Production stage
+FROM node:20-slim AS runner
+
+WORKDIR /app
+
+# Copy only necessary files from builder
+# COPY --from=builder /app/package*.json ./
+# COPY --from=builder /app/.next ./.next
+# COPY --from=builder /app/public ./public
+# COPY --from=builder /app/node_modules ./node_modules
+# COPY --from=builder /app/next.config.js ./
+# COPY --from=builder /app/next-i18next.config.js ./ 
+# COPY --from=builder /app/tsconfig.json ./      
+
+COPY --from=builder /app ./  
+
+# Expose port
 EXPOSE 3000
 
-# Start the application
+# Start Next.js app
 CMD ["npm", "start"]
