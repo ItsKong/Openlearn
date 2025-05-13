@@ -22,12 +22,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-k4ocv5=in8bzc6$(t=d#ub=ch7sk7yxf5+k#-h_a0)@6=ug%yp'
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'unsafe-default-key')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",           # Next.js dev
     "http://192.168.1.3:3000",         # Network access
@@ -163,7 +163,7 @@ SIMPLE_JWT = {
     'AUTH_COOKIE': 'access_token',  # Name of cookie
     'AUTH_COOKIE_REFRESH': 'refresh_token',  # Name of refresh cookie
     'AUTH_COOKIE_DOMAIN': None,
-    'AUTH_COOKIE_SECURE': False,  # Set to True in production with HTTPS
+    'AUTH_COOKIE_SECURE': not DEBUG,  # Set to True in production with HTTPS
     'AUTH_COOKIE_HTTP_ONLY': True,
     'AUTH_COOKIE_PATH': '/',
     'AUTH_COOKIE_SAMESITE': 'Lax',
