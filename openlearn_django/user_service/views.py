@@ -69,9 +69,26 @@ def register(request):
                     tokens = token_serializer.validated_data
 
                     response = JsonResponse(user_serialize.data, status=201)
-
-                    response.set_cookie('access', tokens['access'], httponly=True, secure=False, samesite='Lax')
-                    response.set_cookie('refresh', tokens['refresh'], httponly=True, secure=False, samesite='Lax')
+                    access_token = tokens['access']
+                    refresh_token = tokens['refresh']
+                    if access_token:
+                        response.set_cookie(
+                            'access_token',
+                            access_token,
+                            httponly=True,
+                            secure=True, # Only set secure in production
+                            samesite='None',
+                            max_age=60 * 5 
+                        )
+                    if refresh_token:
+                        response.set_cookie(
+                            'refresh_token',
+                            refresh_token,
+                            httponly=True,
+                            secure=True,
+                            samesite='None',
+                            max_age=60 * 60 * 24
+                        )
 
                     return response
                 else:

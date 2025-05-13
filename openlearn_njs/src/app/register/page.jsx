@@ -62,7 +62,7 @@ export default function Register() {
             })
             .then(json => {
                 console.log("Registered:", json);
-                router.push("/")
+                window.location.href = '/';
             })
             .catch(error => {
                 console.error("Register error:", error);
