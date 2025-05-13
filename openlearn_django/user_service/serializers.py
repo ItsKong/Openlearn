@@ -39,6 +39,7 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
           # Now proceed with standard validation
 
         try:
+            email = email.lower()
             user = User.objects.get(email=email)
             attrs['username'] = user.username  # Set username for authentication
         except User.DoesNotExist:

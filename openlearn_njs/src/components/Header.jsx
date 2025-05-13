@@ -26,8 +26,8 @@ export default function Header({ showSidebar, setShowSidebar}){
                 <Image 
                     src="/images/logos.png" 
                     alt="Logo"
-                    width={150} 
-                    height={50}
+                    width={300} 
+                    height={100}
                     className="logo"
                     />
             </Link>

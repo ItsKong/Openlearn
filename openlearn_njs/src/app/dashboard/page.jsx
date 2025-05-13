@@ -48,7 +48,7 @@ export default function Dashbaord(){
                         <div className="info">
                             <h3 className="text-[2rem]">{course.title}</h3>
                             <p className="text-[1.7rem]">{`Created at: ${course.created_at}`}</p>
-                            <a href={`/playlist/${course.id}`} className="details-link">View Details</a>
+                            <a href={`playlist/${course.id}`} className="details-link">View Details</a>
                         </div>
                     </div>
                 ))

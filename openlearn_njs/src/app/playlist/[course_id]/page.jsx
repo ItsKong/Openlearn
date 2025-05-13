@@ -7,6 +7,8 @@ import { use, useState, useEffect } from "react";
 
 export default function Playlist({ params }){
     const { course_id }= use(params)
+    console.log("courses data", course_id);
+
     const [course, setCourse] = useState({})
     const [videos, setVideos] = useState([])
     useEffect(() => {

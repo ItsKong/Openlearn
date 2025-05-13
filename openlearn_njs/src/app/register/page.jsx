@@ -45,7 +45,7 @@ export default function Register() {
             fetch(process.env.NEXT_PUBLIC_REGISTER, {
                 method: "POST",
                 body: data,
-                credentials: "include",  // 👈 IMPORTANT
+                credentials: "include", 
             })
             .then(res => {
                 if (!res.ok) {

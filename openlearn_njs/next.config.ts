@@ -19,7 +19,13 @@ const nextConfig: NextConfig = {
     NEXT_PUBLIC_POST_SD_COURSE: `${API_URL}/api/saveCouse/`,
     NEXT_PUBLIC_GET_SAVE_COURSE: `${API_URL}/api/save_course_view/`,
     NEXT_PUBLIC_POST_UPDATE_PROFILE: `${API_URL}/api/updateProfile/`,
-      }
+      },
+
+  // output: 'export',
+  // trailingSlash: true, // optional: better for static hosting
+  // images: {
+  //   unoptimized: true // required for static export if using next/image
+  // }
 };
 
 export default nextConfig;

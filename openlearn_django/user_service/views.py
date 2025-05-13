@@ -38,6 +38,7 @@ def register(request):
                 profile_image = request.FILES.get('profile', None)
             # Check username availability
             print("Receive: ", data)
+            data['email'] = data['email'].lower()
             if User.objects.filter(username=data['username']).exists():
                 return JsonResponse({"error": "Username already used."}, status=400)
             elif User.objects.filter(email=data['email']).exists():
@@ -54,7 +55,7 @@ def register(request):
             except Exception as e:
                 return JsonResponse({"error":"Fail to create user", "message": str(e)}, status=400)
             user_data = {
-                'user': new_user.id
+                'user': new_user.id # <---- fix error token failed
             }
             user_serialize = UserModelSerializer(data=user_data)
             print(user_serialize.is_valid())
